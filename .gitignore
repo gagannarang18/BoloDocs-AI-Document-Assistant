@@ -1,0 +1,46 @@
+# Basic Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyd
+*.pyo
+*.so
+*.egg-info/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+secrets/
+
+# AWS credentials
+*.pem
+*.csv
+*.key
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Local development
+temp_uploaded_files/
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# PDFs
+*.pdf

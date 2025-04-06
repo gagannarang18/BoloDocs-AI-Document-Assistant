@@ -1,0 +1,28 @@
+# UI Framework
+streamlit==1.44.1
+
+# Core AI Components
+langchain-aws==0.2.18        # AWS Bedrock integration
+langchain-astradb==0.6.0     # AstraDB vector store
+google-generativeai==0.8.4   # Gemini API
+
+# Document Processing
+pypdf==5.4.0                 # PDF text extraction
+pymupdf==1.25.5              # Fast PDF rendering
+pdf2image==1.17.0            # PDF to image conversion
+pillow==11.1.0               # Image processing
+
+# Environment & Configuration
+python-dotenv==1.1.0         # .env file handling
+pydantic==2.11.2             # Data validation
+pydantic-settings==2.8.1     # Settings management
+pytest==8.3.5                # Testing framework
+
+# AWS Integration
+boto3==1.37.28               # AWS SDK
+botocore==1.37.28            # AWS core utilities
+
+# Required Dependencies
+numpy==1.26.4                # Numerical operations
+protobuf==5.29.4             # Google protocol buffers
+langchain-core==0.1.0        # LangChain base classes
