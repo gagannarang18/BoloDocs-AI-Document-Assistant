@@ -39,6 +39,9 @@ class DocumentProcessor:
             # Combine content
             combined_text = "\n".join([doc.page_content for doc in documents]) + "\n" + image_text
             
-            return self.text_splitter.split_documents([combined_text])
+            # Wrap combined text in a Document instance to satisfy split_documents requirements
+            combined_document = Document(page_content=combined_text)
+            
+            return self.text_splitter.split_documents([combined_document])
         finally:
             os.unlink(tmp_path)
