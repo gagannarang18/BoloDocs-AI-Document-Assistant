@@ -1,11 +1,16 @@
 import streamlit as st
+import sys
+from pathlib import Path
+# Add project root to Python path (adjust parents if needed)
+sys.path.append(str(Path(__file__).resolve().parents[1]))  # Goes up 1 level to BOLODOCS
 from config.settings import settings
 from core.document_processor import DocumentProcessor
 from core.vector_db import AstraDBManager
 from core.ai_handlers import AIHandler
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from config.settings import settings
+
 
 # Initialize core components
 processor = DocumentProcessor(settings.GEMINI_API_KEY)
