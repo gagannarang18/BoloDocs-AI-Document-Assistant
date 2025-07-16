@@ -10,7 +10,8 @@ class AstraDBManager:
     def __init__(self):
         try:
             self.embeddings = BedrockEmbeddings(
-                model_id="amazon.titan-embed-text-v2:0"
+                model_id="amazon.titan-embed-text-v2:0",
+                region_name="us-east-1"
             )
             self.vector_store = AstraDBVectorStore(
                 collection_name="db_minor_embeddings_v1",
