@@ -9,6 +9,8 @@ google-generativeai
 # Document Processing
 pypdf
 pymupdf
+pdf2image
+pillow
 
 # Environment & Configuration
 python-dotenv
