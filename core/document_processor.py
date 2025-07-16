@@ -4,8 +4,8 @@ from typing import List
 from langchain.schema import Document
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from pdf2image import convert_from_path
 import google.generativeai as genai
-import fitz  # PyMuPDF
 
 class DocumentProcessor:
     def __init__(self, gemini_api_key: str):
@@ -16,20 +16,12 @@ class DocumentProcessor:
         genai.configure(api_key=gemini_api_key)
         self.vision_model = genai.GenerativeModel("gemini-1.5-flash")
 
-    def _extract_image_text_with_fitz(self, pdf_path: str) -> str:
-        doc = fitz.open(pdf_path)
-        image_texts = []
-        for page_num, page in enumerate(doc, start=1):
-            pix = page.get_pixmap(dpi=150)  # Adjust DPI if needed
-            image_bytes = pix.tobytes("png")
-            try:
-                response = self.vision_model.generate_content([image_bytes])
-                if response.text:
-                    image_texts.append(response.text)
-            except Exception as e:
-                image_texts.append(f"[Page {page_num}] Gemini error: {str(e)}")
-        doc.close()
-        return "\n".join(image_texts)
+    def _extract_image_text(self, pdf_path: str) -> str:
+        images = convert_from_path(pdf_path)
+        return "\n".join([
+            self.vision_model.generate_content([img]).text
+            for img in images
+        ])
 
     def process_pdf(self, uploaded_file) -> List[Document]:
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -37,19 +29,19 @@ class DocumentProcessor:
             tmp_path = tmp_file.name
 
         try:
-            # Extract text using PyPDFLoader (structured content)
+            # Text extraction
             loader = PyPDFLoader(tmp_path)
             documents = loader.load()
-
-            # Extract visual content using Gemini + fitz images
-            image_text = self._extract_image_text_with_fitz(tmp_path)
-
-            # Combine both text and image-extracted text
+            
+            # Image extraction
+            image_text = self._extract_image_text(tmp_path)
+            
+            # Combine content
             combined_text = "\n".join([doc.page_content for doc in documents]) + "\n" + image_text
-
-            # Wrap and split
+            
+            # Wrap combined text in a Document instance to satisfy split_documents requirements
             combined_document = Document(page_content=combined_text)
+            
             return self.text_splitter.split_documents([combined_document])
-
         finally:
-            os.unlink(tmp_path)
+            os.unlink(tmp_path)  
