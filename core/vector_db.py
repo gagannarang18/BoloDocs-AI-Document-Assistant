@@ -1,7 +1,7 @@
+import streamlit as st
 from langchain_astradb.vectorstores import AstraDBVectorStore
 from langchain_aws import BedrockEmbeddings     
 from langchain_community.llms import Bedrock
-from config.settings import settings
 import logging
 
 logger = logging.getLogger(__name__)
@@ -11,13 +11,16 @@ class AstraDBManager:
         try:
             self.embeddings = BedrockEmbeddings(
                 model_id="amazon.titan-embed-text-v2:0",
-                region_name="us-east-1"
+                region_name=st.secrets["AWS_DEFAULT_REGION"],
+                aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
+                aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
             )
+
             self.vector_store = AstraDBVectorStore(
                 collection_name="db_minor_embeddings_v1",
                 embedding=self.embeddings,
-                token=settings.ASTRA_DB_APPLICATION_TOKEN,
-                api_endpoint=settings.ASTRA_DB_API_ENDPOINT
+                token=st.secrets["ASTRA_DB_APPLICATION_TOKEN"],
+                api_endpoint=st.secrets["ASTRA_DB_API_ENDPOINT"]
             )
             logger.info("Successfully connected to AstraDB Vector Store")
         except Exception as e:
