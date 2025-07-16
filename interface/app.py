@@ -13,7 +13,7 @@ from config.settings import settings
 
 
 # Initialize core components
-processor = DocumentProcessor(settings.GEMINI_API_KEY)
+processor = DocumentProcessor(st.secrets["GEMINI_API_KEY"])
 db_manager = AstraDBManager()
 ai_handler = AIHandler()
 
